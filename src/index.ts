@@ -28,10 +28,6 @@ const repository = new Repository(pool);
 setRepository(repository);
 
 const app = express.default();
-app.on('error', (err) => {
-  console.log(err);
-  console.log('caught error');
-});
 
 SwaggerExpressMiddleware('swagger.yaml', app, (mwErr, middleware, api) => {
   if (mwErr) throw mwErr;
