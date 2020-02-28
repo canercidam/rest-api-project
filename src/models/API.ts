@@ -37,7 +37,7 @@ export namespace API {
     /**
      * Error message
      */
-    message: string;
-    code: 'VALIDATION_ERROR' | 'INTERNAL_ERROR';
+    message?: string;
+    code: 'VALIDATION_ERROR' | 'RESOURCE_NOT_FOUND' | 'INTERNAL_ERROR';
   }
 }

@@ -1,14 +1,14 @@
 import { Response, Request } from 'express';
-import { Repository } from './Repository';
-import { Status, internalErr } from './status';
+import { Repository } from '../Repository';
+import { Status, internalErr } from '../status';
 
-interface Params {
+interface QueryParams {
   date?: string;
   sort?: string;
 }
 
 export async function GetRanks(req: Request, res: Response) {
-  const params = req.params as Params;
+  const params = req.query as QueryParams;
   const result = await Repository.get().getRanks(params.date, params.sort);
   if (result.error) {
     console.log(`failed to get ranks: ${result.error.message}`);

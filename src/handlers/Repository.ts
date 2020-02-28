@@ -1,4 +1,4 @@
-import { DB } from '../models/DB';
+import { API } from '../models/API';
 
 export interface IError<M> {
   message: string;
@@ -10,17 +10,29 @@ export interface Result<D, E = string> {
   error?: IError<E>;
 }
 
+/**
+ * Creates a result with an error.
+ * @param message - message string for error
+ * @param meta - extra metadata
+ */
 export function errResult<M = any>(message: string, meta?: M): Result<any, M> {
   return { error: { message, meta } };
 }
 
+/**
+ * An indirection definition for data access.
+ */
 export interface IRepository {
-  getRanks(date?: string, sort?: string): Promise<Result<DB.TrackerRank[]>>;
+  getRanks(date?: string, sort?: string): Promise<Result<API.TrackerRank[]>>;
   getTrackerEvents(
     trackerUid: string, limit?: number, offset?: number, date?: string, sort?: string
-  ): Promise<Result<DB.Event[]>>;
+  ): Promise<Result<API.Event[]>>;
 }
 
+/**
+ * A class to set IRepository implementation and make it
+ * accessible.
+ */
 export class Repository {
   private static implementation: IRepository;
 
@@ -31,4 +43,8 @@ export class Repository {
   static get() {
     return Repository.implementation;
   }
+}
+
+export function setRepository(implementation: IRepository) {
+  Repository.set(implementation);
 }

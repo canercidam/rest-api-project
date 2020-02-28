@@ -1,21 +1,25 @@
 import { Response, Request } from 'express';
-import { Repository } from './Repository';
-import { Status, internalErr } from './status';
+import { Repository } from '../Repository';
+import { Status, internalErr } from '../status';
 
-interface Params {
+interface QueryParams {
   date?: string;
   sort?: string;
-  tracker_uid?: string;
-  limit?: number;
-  offset?: number;
+  limit?: string;
+  offset?: string;
 }
 
 export async function GetTrackerEvents(req: Request, res: Response) {
   const {
     limit, offset, date, sort,
-  } = req.params as Params;
+  } = req.query as QueryParams;
+  const trackerUid = req.params.tracker_uid;
+
   const result = await Repository.get().getTrackerEvents(
-    req.params.tracker_uid, limit, offset, date, sort,
+    trackerUid,
+    limit ? parseInt(limit, 10) : undefined,
+    offset ? parseInt(offset, 10) : undefined,
+    date, sort,
   );
   if (result.error) {
     console.log(`failed to get tracker events: ${result.error.message}`);

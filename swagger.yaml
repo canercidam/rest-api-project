@@ -175,7 +175,6 @@ definitions:
     type: object
     required:
       - code
-      - message
     properties:
       message:
         type: string
@@ -184,4 +183,6 @@ definitions:
         type: string
         enum:
           - VALIDATION_ERROR
+          - RESOURCE_NOT_FOUND
           - INTERNAL_ERROR
+          - REQUEST_FAILED
