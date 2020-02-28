@@ -1,0 +1,187 @@
+swagger: "2.0"
+info:
+  description: Small API project
+  version: 1.0.0
+  title: API Project
+basePath: /v1
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /ranks:
+    get:
+      tags:
+        - Default
+      operationId: GetRanks
+      summary: Returns trackers with max speed ranks (sortable) and IDs, 
+      parameters:
+        - $ref: '#/parameters/Date'
+        - $ref: '#/parameters/Sort'
+      responses:
+        200:
+          description: Successfully retrieved ranks
+          schema:
+            $ref: '#/definitions/TrackerRanks'
+        400:
+          $ref: '#/responses/BadRequestResponse'
+        500:
+          $ref: '#/responses/InternalErrorResponse'
+
+  /events/{tracker_uid}:
+    get:
+      tags:
+        - Default
+      operationId: GetTrackerEvents
+      summary: Returns all events for given tracker ID, sorted by time
+      parameters:
+        - $ref: '#/parameters/TrackerUID'
+        - $ref: '#/parameters/Date'
+        - $ref: '#/parameters/Sort'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+      responses:
+        200:
+          description: Successfully retrieved events
+          schema:
+            $ref: '#/definitions/Events'
+        400:
+          $ref: '#/responses/BadRequestResponse'
+        500:
+          $ref: '#/responses/InternalErrorResponse'
+
+parameters:
+  Date:
+    in: query
+    name: date
+    type: string
+    format: 'date'
+
+  Sort:
+    in: query
+    name: sort
+    type: string
+    enum: [ASC, DESC]
+
+  Limit:
+    in: query
+    name: limit
+    type: integer
+    minimum: 1
+    maximum: 1000
+  
+  Offset:
+    in: query
+    name: offset
+    type: integer
+    minimum: 1
+
+  TrackerUID:
+    in: path
+    name: tracker_uid
+    type: string
+    required: true
+
+responses:
+  BadRequestResponse:
+    description: Invalid parameters or payload
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+
+  InternalErrorResponse:
+    description: Internal server error
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  TrackerRank:
+    type: object
+    required:
+      - tracker_uid
+      - max_speed_rank
+    properties:
+      tracker_uid:
+        type: integer
+        description: Tracker ID
+      max_speed_rank:
+        type: integer
+        description: Rank for maximum speed of tracker
+
+  TrackerRanks:
+    type: array
+    items:
+      $ref: '#/definitions/TrackerRank'
+
+  Event:
+    type: object
+    required:
+      - uid
+      - tracker_uid
+      - angle
+      - speed
+      - aquisition_time
+      - visible_satellites
+      - engine
+      - event_id
+      - event_info
+      - insert_time
+      - mileage
+      - voltage
+      - driver_ibutton
+      - hdop
+    properties:
+      uid:
+        type: integer
+      tracker_uid:
+        type: integer
+      angle:
+        type: integer
+      speed:
+        type: integer
+      aquisition_time:
+        type: integer
+        description: Timestamp
+      visible_satellites:
+        type: integer
+      engine:
+        type: string
+        enum: [on, off]
+      event_id:
+        type: integer
+      event_info:
+        type: integer
+      insert_time:
+        type: string
+        format: 'date-time'
+      mileage:
+        type: integer
+      voltage:
+        type: number
+      driver_ibutton:
+        type: string
+      hdop:
+        type: number
+
+  Events:
+    type: array
+    items:
+      $ref: '#/definitions/Event'
+
+  ErrorResponse:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      message:
+        type: string
+        description: Error message
+      code:
+        type: string
+        enum:
+          - VALIDATION_ERROR
+          - INTERNAL_ERROR
