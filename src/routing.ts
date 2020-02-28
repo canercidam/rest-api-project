@@ -3,12 +3,12 @@ import { SwaggerObject } from 'swagger-express-middleware';
 import asyncHandler from 'express-async-handler';
 import { HandlerRegistry } from './handlers/HandlerRegistry';
 
-interface RouteDefinition {
+export interface RouteDefinition {
   method: string;
   path: string;
 }
 
-interface RouteDefinitions {
+export interface RouteDefinitions {
   [name: string]: RouteDefinition | undefined;
 }
 
@@ -17,7 +17,7 @@ function fixPath(path: string, basePath?: string) {
   return (basePath ? basePath + fixedPath : fixedPath);
 }
 
-function getRouteDefinitions(api: SwaggerObject): RouteDefinitions {
+export function getRouteDefinitions(api: SwaggerObject): RouteDefinitions {
   const defs: RouteDefinitions = {};
 
   Object.keys(api.paths).forEach((swaggerPath) => {

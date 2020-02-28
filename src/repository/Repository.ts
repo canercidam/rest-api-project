@@ -37,6 +37,7 @@ export class Repository implements IRepository {
   /**
    * Orders events by speed, takes the first ones (max) using "GROUP BY",
    * sorts in asc or desc order and assigns a rank for each max speed.
+   * CAST in query is used for SELECTing as number.
    * @param date - only on this date
    * @param sort - ASC or DESC
    */
@@ -46,8 +47,8 @@ export class Repository implements IRepository {
         SELECT 
           t2.tracker_uid,
           CASE
-            WHEN @prev = t2.speed THEN @rank
-            WHEN (@prev := t2.speed) IS NOT NULL THEN @rank := @rank + 1
+            WHEN @prev = t2.speed THEN CAST(@rank AS UNSIGNED)
+            WHEN (@prev := t2.speed) IS NOT NULL THEN CAST(@rank := @rank + 1 AS UNSIGNED)
           END AS max_speed_rank
         FROM (
           SELECT tracker_uid, speed
