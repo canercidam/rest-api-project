@@ -3,6 +3,7 @@ import { createPool, PoolConfig } from 'mysql';
 import * as express from 'express';
 import SwaggerExpressMiddleware from 'swagger-express-middleware';
 import swaggerUI from 'swagger-ui-express';
+import morgan from 'morgan';
 import { Repository } from './repository/Repository';
 import { setRepository } from './handlers/Repository';
 import { setRoutes, Router } from './routing';
@@ -35,9 +36,12 @@ app.on('error', (err) => {
 SwaggerExpressMiddleware('swagger.yaml', app, (mwErr, middleware, api) => {
   if (mwErr) throw mwErr;
 
+  app.set('x-powered-by', false);
+
   app.use(
     middleware.metadata(),
     middleware.CORS(),
+    morgan(env.PRODUCTION ? 'combined' : 'dev'),
     middleware.parseRequest(),
     middleware.validateRequest(),
   );
@@ -53,6 +57,6 @@ SwaggerExpressMiddleware('swagger.yaml', app, (mwErr, middleware, api) => {
   const port = env.SERVER_PORT || 8080;
 
   app.listen(port, () => {
-    console.log(`listening on ${port}`);
+    console.log(`listening on ${port}...`);
   });
 });
