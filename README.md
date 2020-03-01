@@ -1,4 +1,4 @@
-# swagger-api-project
+# rest-api-project
 
 A small REST API project with Node.js + TypeScript, express, Swagger and MySQL.
 
