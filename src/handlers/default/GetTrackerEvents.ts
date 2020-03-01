@@ -25,5 +25,6 @@ export async function GetTrackerEvents(req: Request, res: Response) {
     console.log(`failed to get tracker events: ${result.error.message}`);
     return res.status(Status.InternalError).json(internalErr());
   }
+
   return res.status(Status.OK).json(result.data);
 }
