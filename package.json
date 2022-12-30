@@ -24,7 +24,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-airbnb-typescript": "^6.3.1",
     "eslint-plugin-import": "^2.20.0",
-    "mocha": "^7.0.1"
+    "mocha": "^10.2.0"
   },
   "dependencies": {
     "@manifoldco/swagger-to-ts": "^1.7.0",
